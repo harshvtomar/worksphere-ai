@@ -24,4 +24,4 @@ Hosted CI performs this sequence against PostgreSQL 17 after the local gate. Def
 
 ## Browser checks
 
-Start both apps and inspect desktop and narrow-screen layouts, sample-data labeling, the online/offline API indicator and console errors. Record what was actually observed. Browser QA remains pending unless documented in the completion report.
+Start both apps and inspect desktop and narrow-screen layouts, sample-data labeling, the online/offline API indicator and console errors. Record what was actually observed. Static-mirror desktop/mobile/tablet QA is recorded in the completion report, including its limitation: the mirror had no backend, so online API connectivity was not tested through the browser.

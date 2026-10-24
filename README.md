@@ -6,7 +6,7 @@ Repository: https://github.com/harshvtomar/worksphere-ai
 
 This foundation contains a responsive dashboard with clearly labeled sample data, a real NestJS health API, and a PostgreSQL schema with an initial migration. Authentication, persistent application workflows, authorization, AI and billing are not implemented. Stage 2 has not started.
 
-Local installation, TypeScript, production builds, Prisma validation/generation, automated tests and HTTP smoke checks have passed. Publication and hosted CI are pending at this documentation checkpoint. See [completion report](STAGE_1_COMPLETION_REPORT.md) for acceptance status; a passing local gate alone does not mean Stage 1 is complete.
+Local installation (`npm ci`: 301 packages), TypeScript, production builds, Prisma validation/generation, automated tests and HTTP smoke checks have passed. Sources are published and hosted CI passed, including PostgreSQL 17 migration and constraint checks. Stage 1 is complete within the documented foundation scope. See [completion report](STAGE_1_COMPLETION_REPORT.md) for acceptance status; a passing local gate alone does not mean Stage 1 is complete.
 
 ## Stack and layout
 
@@ -93,3 +93,9 @@ On pushes to `main`, pull requests, or manual dispatch, CI installs from the loc
 The preview has no real accounts or customer data. CORS is an origin policy, not authentication. Foreign keys and uniqueness constraints do not enforce organization membership of creators, reporters, assignees, comment authors or audit actors. No row-level security is configured. Stage 2 must implement authenticated tenant-scoped access and negative cross-tenant tests before exposing private data. Health reports API liveness only, not database readiness.
 
 Continue using [NEXT_STAGE_PROMPT.md](NEXT_STAGE_PROMPT.md), only after all Stage 1 acceptance requirements pass. Public production deployment remains Stage 13.
+
+## Build and browser verification notes
+
+A repeated production build reproduced a Turbopack persistent-cache reopen error. The supported `experimental.turbopackFileSystemCacheForBuild: false` setting disables that optional cache; two repeat builds then passed. This does not disable compilation or checks.
+
+Browser inspection used a temporary static mirror of built, prerendered HTML plus JavaScript/CSS. Desktop, 390px mobile and 768px tablet layouts were inspected without document-level horizontal overflow. Sample labels, responsive cards/sidebar and API offline state were observed; no application console errors were observed. The mirror had no backend, so browser online connectivity and full Next browser behavior were not verified. Built Next/Nest HTTP runtime checks passed separately.

@@ -2,7 +2,7 @@
 
 | Stage | Workstream | Status |
 |---|---|---|
-| 1 | Architecture, monorepo, API foundation, preview dashboard, DB model | Local builds, Prisma, 11 source + 14 runtime + 8 embedded DB tests and HTTP smoke passed; source publication/hosted PostgreSQL CI acceptance pending (see completion report) |
+| 1 | Architecture, monorepo, API foundation, preview dashboard, DB model | Local builds, Prisma, 11 source + 14 runtime + 8 embedded DB tests and HTTP smoke passed; source published; hosted PostgreSQL 17 migration and CI passed (see completion report) |
 | 2 | Authentication, session security, organizations and role permissions | Not started |
 | 3 | Project CRUD, tasks, Kanban, assignments and due dates | Not started |
 | 4 | Realtime collaboration, presence and notifications | Not started |

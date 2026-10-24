@@ -1,0 +1,21 @@
+Source commit: 994ef432926beea7cc109a34d07780343d84f0ec
+Hosted run: https://github.com/harshvtomar/worksphere-ai/actions/runs/40119116466
+Observed conclusion: success
+Selected exact hosted log lines:
+2026-10-24T18:06:14.7602384Z # tests 11
+2026-10-24T18:06:14.7603711Z # pass 11
+2026-10-24T18:06:14.7604268Z # fail 0
+2026-10-24T18:06:32.5950397Z # tests 14
+2026-10-24T18:06:32.5951612Z # pass 14
+2026-10-24T18:06:32.5952311Z # fail 0
+2026-10-24T18:06:35.1720131Z # tests 8
+2026-10-24T18:06:35.1720875Z # pass 8
+2026-10-24T18:06:35.1721427Z # fail 0
+2026-10-24T18:06:36.1719948Z SMOKE OK: API health, metadata, CORS allowlist, and rendered web homepage.
+2026-10-24T18:06:37.9113701Z Applying migration `20261024000000_init`
+2026-10-24T18:06:37.9762591Z All migrations have been successfully applied.
+2026-10-24T18:06:39.1905471Z No pending migrations to apply.
+2026-10-24T18:06:40.3143880Z Database schema is up to date!
+2026-10-24T18:06:40.6337269Z # tests 8
+2026-10-24T18:06:40.6342968Z # pass 8
+2026-10-24T18:06:40.6343267Z # fail 0
