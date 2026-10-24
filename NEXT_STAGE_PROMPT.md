@@ -21,3 +21,5 @@ Treat Organization as the current tenant boundary. There is no separate Workspac
 Add meaningful tests: unauthenticated calls rejected, nonmember/cross-tenant access denied without disclosure, no member-to-owner escalation, invitation ownership/expiry/replay handling, session/CSRF policy, and migrations replayable on a clean database. Keep `/v1/health` database-independent; add readiness separately when database connectivity is introduced.
 
 Use environment templates and keep secrets out of Git. Update documentation and evidence, publish only verified changes, observe actual hosted CI, and record commit SHA and run URL. Report passed/failed/pending acceptance criteria honestly. Keep sample-data labels until corresponding data actually persists. Do not start Stage 3.
+
+Stage 1 browser follow-up is complete: live Next/Nest API connectivity, responsive layouts and console checks passed. Read docs/BROWSER_QA.md; do not repeat the earlier static-mirror-only limitation as a current blocker.

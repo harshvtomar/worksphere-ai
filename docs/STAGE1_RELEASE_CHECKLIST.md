@@ -14,7 +14,7 @@ Use the [completion report](../STAGE_1_COMPLETION_REPORT.md) for current evidenc
 - [x] Public target repository created.
 - [x] Reproducible setup and continuation documentation.
 - [x] Clean `npm ci` (301 packages) and local verification passed.
-- [x] Static-mirror responsive/console/offline-status QA recorded with limits; no full online backend browser claim.
+- [x] Live production-server browser QA: API connected, desktop/mobile/tablet layouts and console inspection passed; previous offline-state observation retained.
 - [x] Verified sources, lockfile, migration and workflow published.
 - [x] Hosted CI passed, including standalone PostgreSQL deployment and 8 constraint tests.
 - [x] Final tested source SHA and Actions run URL recorded.

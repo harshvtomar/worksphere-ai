@@ -12,4 +12,4 @@ The API exposes liveness and metadata only. The dashboard is labeled sample data
 
 Published source SHA: `994ef432926beea7cc109a34d07780343d84f0ec`. Hosted verification **passed**; run: https://github.com/harshvtomar/worksphere-ai/actions/runs/40119116466.
 
-Clean `npm ci` (301 packages) and the verification gate passed. Static-mirror browser QA passed for desktop/mobile/tablet and offline indicator; full online backend browser behavior was not checked. Two repeated builds passed after disabling the optional Turbopack build filesystem cache.
+Clean `npm ci` (301 packages) and the verification gate passed. Live Next/Nest browser QA now passed: API connected at desktop/mobile/tablet sizes, no document overflow and no application console errors. See docs/BROWSER_QA.md. Two repeated builds passed after disabling the optional Turbopack build filesystem cache.

@@ -19,3 +19,12 @@ Selected exact hosted log lines:
 2026-10-24T18:06:40.6337269Z # tests 8
 2026-10-24T18:06:40.6342968Z # pass 8
 2026-10-24T18:06:40.6343267Z # fail 0
+
+Browser follow-up: October 25, 2026 Asia/Kolkata
+Application checkpoint: d08d912685fa8546e8057a333f3a9e2ec9ad161d
+Desktop status: API connected; width/scrollWidth 1348/1348
+390px iframe status: API connected; width/scrollWidth 375/375
+768px iframe status: API connected; width/scrollWidth 753/753
+Health page: {"status":"ok","service":"worksphere-api","version":"0.1.0"}
+Console: no application errors observed; unrelated chrome-extension metadata error
+Runtime: next start plus node apps/api/dist/main.js; temporary same-origin reverse proxy

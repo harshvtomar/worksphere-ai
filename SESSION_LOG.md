@@ -24,3 +24,9 @@ No Stage 2 product functionality was started. Browser verification, clean-instal
 ## Hosted acceptance completed
 
 GitHub run 40119116466 completed successfully for implementation commit `994ef432926beea7cc109a34d07780343d84f0ec`. PostgreSQL 17 applied migration `20261024000000_init`; repeat deployment had no pending migrations; schema status was up to date; 8 standalone database tests passed. The CI executed 41 test cases across four suites, with zero failures, plus HTTP smoke. This supersedes the earlier queued checkpoint. Stage 1 is complete with documented browser scope. Stage 2 remains unstarted.
+
+## October 25, 2026 — pending browser verification completed
+
+Live production-server browser QA passed on October 25, 2026 (Asia/Kolkata). Next.js and NestJS ran together behind a temporary same-origin QA reverse proxy; NEXT_PUBLIC_API_URL was set to an empty string at build time. The browser displayed API connected on desktop, 390px mobile and 768px tablet layouts. Document width/scrollWidth matched at 1348/1348, 375/375 and 753/753 respectively. No application console errors were observed; one browser-extension metadata error was unrelated. The browser also displayed the real NestJS health JSON. See docs/BROWSER_QA.md for reproduction and scope.
+
+Verified application source checkpoint: d08d912685fa8546e8057a333f3a9e2ec9ad161d (Actions run 40119327815 passed). Only verification documentation changes in this follow-up. Earlier statements that online browser QA was unverified are superseded.

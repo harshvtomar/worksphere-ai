@@ -1,6 +1,6 @@
 # WorkSphere AI — Stage 1 completion report
 
-Checkpoint date: October 24, 2026 (Asia/Kolkata).
+Checkpoint date: October 25, 2026 (Asia/Kolkata).
 Repository: https://github.com/harshvtomar/worksphere-ai
 
 **Status: Stage 1 foundation acceptance complete.** Sources are published and hosted CI passed, including standalone PostgreSQL 17 migration verification. Stage 2 has not started.
@@ -17,7 +17,7 @@ Repository: https://github.com/harshvtomar/worksphere-ai
 | Prisma migration against standalone test PostgreSQL | Passed | Hosted PostgreSQL 17: initial migration applied, repeat deploy reported no pending migrations, schema up to date, 8 constraint tests passed |
 | Automated source and runtime tests | Passed | 11 source + 14 runtime configuration tests, 0 failed |
 | Frontend/backend HTTP smoke | Passed | HTTP 200, health JSON, metadata, allowed/denied CORS, rendered homepage |
-| Browser responsive and console QA | Passed with limits | Built static mirror inspected at desktop/mobile/tablet; offline indicator observed; online backend browser check not performed |
+| Browser responsive and console QA | Passed | Live Next/Nest production servers; API connected on desktop/mobile/tablet; no application console errors |
 | Repository creation | Passed | Public target repository created |
 | Source publication | Passed | Source commit `994ef432926beea7cc109a34d07780343d84f0ec` published |
 | Hosted GitHub Actions | Passed | [Run 40119116466](https://github.com/harshvtomar/worksphere-ai/actions/runs/40119116466) completed successfully |
@@ -43,7 +43,7 @@ No authentication, tenant-authorized application data access, independent Worksp
 
 No required Stage 1 build, test, publication or hosted database acceptance item remains open. Local tests: **33 passed / 0 failed** (11 source + 14 runtime configuration + 8 embedded PostgreSQL). Hosted CI: **41 passed / 0 failed** across those suites plus the same 8 database checks repeated against standalone PostgreSQL 17; HTTP smoke is additional. These are suite executions, not 41 distinct test scenarios.
 
-The local container could not provision standalone PostgreSQL; its migration requirement was completed in the isolated hosted CI service. Browser QA scope is explicitly limited below. This foundation is not a production SaaS.
+The local container could not provision standalone PostgreSQL; its migration requirement was completed in the isolated hosted CI service. Browser QA topology is documented below. This foundation is not a production SaaS.
 
 Start a separate Stage 2 session using `NEXT_STAGE_PROMPT.md`. Inspect current remote main and its CI before editing; do not restart Stage 1. Authentication and tenant authorization remain Stage 2 work.
 
@@ -51,4 +51,6 @@ Start a separate Stage 2 session using `NEXT_STAGE_PROMPT.md`. Inspect current r
 
 Clean `npm ci` installed 301 packages and the clean local verification gate passed. Repeated production builds reproduced a Turbopack persistent-cache reopen failure; disabling only `experimental.turbopackFileSystemCacheForBuild` fixed it, and two repeat builds passed.
 
-Browser inspection used a temporary static mirror of built prerendered HTML, JavaScript and CSS, not the full Next server. Desktop document width/scrollWidth were 1348/1348. Mobile iframe 390 CSS px yielded content width/scrollWidth 375/375; tablet 768 CSS px yielded 753/753. Screenshots showed responsive cards/sidebar and explicit preview labels. API offline state was observed. Console messages were browser-extension metadata errors only; no application error was observed. The mirror had no backend, so browser online connectivity remains unverified. Actual built Next and Nest HTTP checks passed separately.
+Live production-server browser QA passed on October 25, 2026 (Asia/Kolkata). Next.js and NestJS ran together behind a temporary same-origin QA reverse proxy; NEXT_PUBLIC_API_URL was set to an empty string at build time. The browser displayed API connected on desktop, 390px mobile and 768px tablet layouts. Document width/scrollWidth matched at 1348/1348, 375/375 and 753/753 respectively. No application console errors were observed; one browser-extension metadata error was unrelated. The browser also displayed the real NestJS health JSON. See docs/BROWSER_QA.md for reproduction and scope.
+
+The earlier static-mirror offline check is retained as historical evidence; the online verification gap is now closed. No Stage 2 functionality was added.
