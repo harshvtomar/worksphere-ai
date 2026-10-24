@@ -1,0 +1,47 @@
+name: Stage 1 foundation checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: worksphere
+          POSTGRES_PASSWORD: ci_disposable_only
+          POSTGRES_DB: worksphere_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U worksphere -d worksphere_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://worksphere:ci_disposable_only@127.0.0.1:5432/worksphere_test?schema=public
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Source checks, TypeScript, builds, Prisma, config, embedded database and HTTP smoke
+        run: npm run verify:stage1
+      - name: Deploy migration to PostgreSQL 17
+        run: npm run db:deploy
+      - name: Verify deployment is repeatable
+        run: npm run db:deploy && npm run status -w @worksphere/database
+      - name: PostgreSQL constraints and relationships
+        run: npm run test:database
+        env:
+          DATABASE_TEST_MODE: postgres

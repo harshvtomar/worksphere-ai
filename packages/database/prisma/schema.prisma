@@ -1,0 +1,149 @@
+// Stage 1 domain model (not migrated until PostgreSQL is available).
+// Prisma ORM v7 places DATABASE_URL in prisma.config.ts, not here.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrganizationRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum ProjectStatus {
+  PLANNED
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  ARCHIVED
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  displayName String
+  avatarUrl   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  memberships Membership[]
+  assigned    Task[]       @relation("TaskAssignee")
+  reported    Task[]       @relation("TaskReporter")
+  comments    Comment[]
+  events      AuditEvent[]
+  projects    Project[]    @relation("ProjectCreator")
+}
+
+model Organization {
+  id         String       @id @default(cuid())
+  name       String
+  slug       String       @unique
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  members    Membership[]
+  projects   Project[]
+  auditTrail AuditEvent[]
+}
+
+model Membership {
+  id             String           @id @default(cuid())
+  userId         String
+  organizationId String
+  role           OrganizationRole @default(MEMBER)
+  joinedAt       DateTime         @default(now())
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId, role])
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  organizationId String
+  createdById    String
+  key            String
+  name           String
+  description    String?
+  status         ProjectStatus @default(PLANNED)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator        User          @relation("ProjectCreator", fields: [createdById], references: [id])
+  tasks          Task[]
+
+  @@unique([organizationId, key])
+  @@index([organizationId, status])
+}
+
+model Task {
+  id         String       @id @default(cuid())
+  projectId  String
+  reporterId String
+  assigneeId String?
+  title      String
+  detail     String?
+  status     TaskStatus   @default(TODO)
+  priority   TaskPriority @default(MEDIUM)
+  position   Int          @default(0)
+  dueAt      DateTime?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  project    Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reporter   User         @relation("TaskReporter", fields: [reporterId], references: [id])
+  assignee   User?        @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  comments   Comment[]
+
+  @@index([projectId, status, position])
+  @@index([assigneeId, status])
+  @@index([dueAt])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  taskId    String
+  authorId  String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id])
+
+  @@index([taskId, createdAt])
+}
+
+model AuditEvent {
+  id             String       @id @default(cuid())
+  organizationId String
+  actorId        String?
+  action         String
+  entityType     String
+  entityId       String
+  payload        Json?
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actor          User?        @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([entityType, entityId])
+}

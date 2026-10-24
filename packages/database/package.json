@@ -1,0 +1,20 @@
+{
+  "name": "@worksphere/database",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "generate": "prisma generate",
+    "validate": "prisma validate",
+    "migrate": "prisma migrate dev --name init",
+    "studio": "prisma studio",
+    "deploy": "prisma migrate deploy",
+    "status": "prisma migrate status"
+  },
+  "devDependencies": {
+    "prisma": "^7.0.0",
+    "dotenv": "^17.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.0.0"
+  }
+}
