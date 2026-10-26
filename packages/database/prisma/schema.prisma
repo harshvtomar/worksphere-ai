@@ -1,8 +1,8 @@
-// Stage 1 domain model (not migrated until PostgreSQL is available).
+// Stage 2 tenant, identity and session model; use committed migrations.
 // Prisma ORM v7 places DATABASE_URL in prisma.config.ts, not here.
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated"
 }
 
@@ -46,6 +46,8 @@ model User {
   avatarUrl   String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  identities  OAuthIdentity[]
+  invitations Invitation[] @relation("Inviter")
   memberships Membership[]
   assigned    Task[]       @relation("TaskAssignee")
   reported    Task[]       @relation("TaskReporter")
@@ -60,6 +62,7 @@ model Organization {
   slug       String       @unique
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+  invitations Invitation[]
   members    Membership[]
   projects   Project[]
   auditTrail AuditEvent[]
@@ -146,4 +149,39 @@ model AuditEvent {
 
   @@index([organizationId, createdAt])
   @@index([entityType, entityId])
+}
+
+model OAuthIdentity {
+  id      String @id @default(cuid())
+  issuer  String
+  subject String
+  userId  String
+  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([issuer, subject])
+  @@index([userId])
+}
+
+model Invitation {
+  id             String @id @default(cuid())
+  organizationId String
+  inviterId      String
+  email          String
+  role           OrganizationRole @default(MEMBER)
+  tokenHash      String @unique
+  expiresAt      DateTime
+  acceptedAt     DateTime?
+  revokedAt      DateTime?
+  createdAt      DateTime @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  inviter        User @relation("Inviter", fields: [inviterId], references: [id], onDelete: Cascade)
+  @@index([organizationId, email])
+}
+
+// connect-pg-simple owns session lifecycle; migration owns the table.
+model SessionRecord {
+  sid    String @id @db.VarChar
+  sess   Json @db.Json
+  expire DateTime @db.Timestamp(6)
+  @@index([expire], map: "IDX_session_expire")
+  @@map("session")
 }

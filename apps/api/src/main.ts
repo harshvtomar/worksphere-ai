@@ -1,6 +1,7 @@
 import "dotenv/config";
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
+import { sessionMiddleware } from "./security.js";
 import { AppModule } from "./app.module.js";
 
 async function bootstrap() {
@@ -20,6 +21,8 @@ async function bootstrap() {
     } catch { return true; }
   })) throw new Error("CORS_ORIGINS must contain comma-separated HTTP(S) origins without paths");
   const app = await NestFactory.create(AppModule);
+  if (process.env.TRUST_PROXY === "1") app.getHttpAdapter().getInstance().set("trust proxy", 1);
+  app.use(sessionMiddleware());
   app.enableCors({
     origin: (origin: string | undefined, callback: (error: Error | null, allow: boolean) => void) => {
       if (!origin || allowedOrigins.includes(origin)) return callback(null, true);

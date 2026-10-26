@@ -1,15 +1,11 @@
 # WorkSphere AI — Project state
 
-Updated October 24, 2026. Stage 1 of 14; Stage 2 not started.
+Updated October 27, 2026 (Asia/Kolkata). Stage 2 implementation is present; acceptance remains pending. Stage 3 has not started.
 
 Repository: https://github.com/harshvtomar/worksphere-ai
 
-Local dependency installation, both builds, TypeScript, Prisma validation/generation, 11 source tests, 14 runtime failure tests, 8 embedded database tests and frontend/API HTTP smoke checks passed. The initial migration and PostgreSQL-enabled CI workflow are present.
+Stage 1 baseline: e9d3b6624e87e9cd9584f3ad0f8d5e377ffb4604; successful hosted run: https://github.com/harshvtomar/worksphere-ai/actions/runs/40142907117.
 
-Stage 1 foundation acceptance is **complete**. Hosted CI independently passed on PostgreSQL 17, including migration deployment, repeat deployment and eight constraint tests. See [STAGE_1_COMPLETION_REPORT.md](STAGE_1_COMPLETION_REPORT.md) for the authoritative checkpoint matrix.
+Stage 2 implements OIDC, persistent sessions, CSRF, protected frontend routes, organizations, invitations and backend role enforcement. Organization remains the tenant boundary. Project/task preview data remains sample data.
 
-The API exposes liveness and metadata only. The dashboard is labeled sample data. Organization relationships are schema structure, not authorization. A separate Workspace entity and tenant-access enforcement are not implemented.
-
-Published source SHA: `994ef432926beea7cc109a34d07780343d84f0ec`. Hosted verification **passed**; run: https://github.com/harshvtomar/worksphere-ai/actions/runs/40119116466.
-
-Clean `npm ci` (301 packages) and the verification gate passed. Live Next/Nest browser QA now passed: API connected at desktop/mobile/tablet sizes, no document overflow and no application console errors. See docs/BROWSER_QA.md. Two repeated builds passed after disabling the optional Turbopack build filesystem cache.
+See STAGE_2_COMPLETION_REPORT.md for authoritative pending checks, local concurrency infrastructure failure, hosted verification and external-provider blocker. No Stage 3 work is authorized by this checkpoint.

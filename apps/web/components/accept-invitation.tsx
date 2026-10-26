@@ -1,0 +1,9 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { api, type Session } from '../lib/api';
+export function AcceptInvitation() {
+  const [token,setToken]=useState(''),[session,setSession]=useState<Session|null>(null),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState('');
+  useEffect(()=>{setToken(new URLSearchParams(window.location.hash.slice(1)).get('token')??'');api<Session>('/auth/session').then(setSession).catch(e=>setError(e.message)).finally(()=>setLoading(false));},[]);
+  async function accept(){setBusy(true);setError('');try{await api('/invitations/accept',{method:'POST',csrf:session?.csrfToken,body:{token}});window.location.assign('/organizations');}catch(e){setError(e instanceof Error?e.message:'Invitation unavailable');setBusy(false);}}
+  return <div className="auth-card"><span className="eyebrow">BETTER TOGETHER</span><h1>Join your team</h1><p>Accept your invitation using the verified email it was sent to.</p>{error&&<div role="alert" className="notice error">{error}</div>}{loading?<p role="status">Checking your session…</p>:!session?.user?<a className="primary button-link" href={`/login?returnTo=${encodeURIComponent(token?`/invite#token=${token}`:'/invite')}`}>Sign in to accept</a>:<form onSubmit={e=>{e.preventDefault();accept();}}><p>Signed in as <strong>{session.user.email}</strong></p><label htmlFor="invitation-token">Invitation token</label><input id="invitation-token" autoComplete="off" value={token} onChange={e=>setToken(e.target.value)} pattern="[a-f0-9]{64}" required/><p className="small">The link fills this automatically. An expired or previously used invitation cannot be accepted.</p><button className="primary" disabled={busy}>{busy?'Joining…':'Accept invitation'}</button></form>}<a href="/organizations">Back to organizations</a></div>;
+}

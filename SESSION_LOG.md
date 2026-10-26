@@ -30,3 +30,7 @@ GitHub run 40119116466 completed successfully for implementation commit `994ef43
 Live production-server browser QA passed on October 25, 2026 (Asia/Kolkata). Next.js and NestJS ran together behind a temporary same-origin QA reverse proxy; NEXT_PUBLIC_API_URL was set to an empty string at build time. The browser displayed API connected on desktop, 390px mobile and 768px tablet layouts. Document width/scrollWidth matched at 1348/1348, 375/375 and 753/753 respectively. No application console errors were observed; one browser-extension metadata error was unrelated. The browser also displayed the real NestJS health JSON. See docs/BROWSER_QA.md for reproduction and scope.
 
 Verified application source checkpoint: d08d912685fa8546e8057a333f3a9e2ec9ad161d (Actions run 40119327815 passed). Only verification documentation changes in this follow-up. Earlier statements that online browser QA was unverified are superseded.
+
+## October 27, 2026 — Stage 2 checkpoint
+
+Implemented OIDC with established libraries, persistent PostgreSQL sessions, CSRF, organization/member/invitation APIs and responsive protected UI. Added signed local OIDC fixture and negative authorization/session tests. Builds passed and 17 configuration tests passed. Expanded concurrent-panel test reproduced PGlite socket missing-portal/prepared-statement errors and a late-header API crash; fixed the crash path. Standalone PostgreSQL CI is the next validation step. External provider credentials remain absent. Stage 3 not started.

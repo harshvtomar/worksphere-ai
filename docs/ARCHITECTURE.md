@@ -77,3 +77,8 @@ All domain IDs use CUID strings. Membership uses a unique `(userId, organization
 Local installation, TypeScript, production builds, Prisma validation/generation, source/runtime tests, embedded PostgreSQL schema checks and HTTP smoke checks have passed. Sources are published; hosted CI with standalone PostgreSQL 17 migration and constraint tests passed. Live Next/Nest browser-to-backend connectivity and desktop/mobile/tablet layouts passed through a temporary same-origin QA proxy. See `STAGE_1_COMPLETION_REPORT.md` for current evidence.
 
 Organization is the current tenant grouping; there is no separate Workspace entity. Foreign keys do not ensure that creators, reporters, assignees, comment authors or audit actors belong to the resource organization. No row-level security is present. Stage 2 must enforce tenant membership in authenticated data access before private data is exposed.
+
+
+## Stage 2 identity and tenant access
+
+Next.js forwards same-origin `/v1` requests to NestJS. OIDC code exchange and opaque sessions stay server-side. PostgreSQL stores identities, sessions, invitations and organization memberships. Every scoped API verifies membership; transactions serialize tenant-sensitive writes. See STAGE2_SECURITY.md for role policy and session/CSRF boundaries. Health bypasses database/session middleware.

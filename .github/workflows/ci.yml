@@ -1,4 +1,4 @@
-name: Stage 1 foundation checks
+name: WorkSphere foundation and authentication checks
 on:
   push:
     branches: [main]
@@ -45,3 +45,7 @@ jobs:
         run: npm run test:database
         env:
           DATABASE_TEST_MODE: postgres
+      - name: Stage 2 OIDC, sessions, authorization and tenant isolation on PostgreSQL
+        run: npm run test:stage2
+        env:
+          STAGE2_TEST_DATABASE_URL: postgresql://worksphere:ci_disposable_only@127.0.0.1:5432/worksphere_test?schema=public

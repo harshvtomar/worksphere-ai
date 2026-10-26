@@ -13,7 +13,7 @@ export function ApiStatus() {
       setStatus("offline");
       controller.abort();
     }, 5000);
-    const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+    const base = process.env.NEXT_PUBLIC_API_URL ?? "";
     async function check() {
       try {
         const response = await fetch(`${base}/v1/health`, {

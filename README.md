@@ -1,12 +1,12 @@
 # WorkSphere AI
 
-Enterprise workflow automation and real-time collaboration SaaS — Stage 1 of 14.
+Enterprise workflow automation and real-time collaboration SaaS — Stage 2 of 14.
 
 Repository: https://github.com/harshvtomar/worksphere-ai
 
-This foundation contains a responsive dashboard with clearly labeled sample data, a real NestJS health API, and a PostgreSQL schema with an initial migration. Authentication, persistent application workflows, authorization, AI and billing are not implemented. Stage 2 has not started.
+Stage 2 adds OIDC sign-in, PostgreSQL-backed sessions, protected pages, organizations, invitations and server-enforced Owner/Admin/Member permissions. The public dashboard retains clearly labeled sample project/task data. Organization is the tenant boundary; no separate Workspace entity exists.
 
-Local installation (`npm ci`: 301 packages), TypeScript, production builds, Prisma validation/generation, automated tests and HTTP smoke checks have passed. Sources are published and hosted CI passed, including PostgreSQL 17 migration and constraint checks. Stage 1 is complete within the documented foundation scope. See [completion report](STAGE_1_COMPLETION_REPORT.md) for acceptance status; a passing local gate alone does not mean Stage 1 is complete.
+Stage 2 verification is in progress. Real external-provider sign-in remains blocked on provider configuration. See [Stage 2 completion report](STAGE_2_COMPLETION_REPORT.md) and [security/setup guide](docs/STAGE2_SECURITY.md). Stage 3 has not started.
 
 ## Stack and layout
 
@@ -19,7 +19,7 @@ Local installation (`npm ci`: 301 packages), TypeScript, production builds, Pris
 | CI | GitHub Actions with PostgreSQL 17 service — `.github/workflows/ci.yml` |
 | Design and checkpoints | `docs`, `PROJECT_STATE.md`, `SESSION_LOG.md` |
 
-The frontend calls `/v1/health` on the API. The API currently serves health and metadata only; it does not query the database. Organizations contain projects, projects contain tasks, and tasks contain comments. Membership links users to organizations. There is no separate Workspace entity.
+The frontend forwards same-origin `/v1` requests to NestJS. Health and metadata bypass authentication and database access. Private APIs authenticate the session and verify organization membership on every scoped request. Projects/tasks are schema foundations only.
 
 ## MacBook Air with Apple Silicon
 
@@ -33,6 +33,8 @@ npm ci
 cp apps/web/.env.example apps/web/.env.local
 cp apps/api/.env.example apps/api/.env
 cp packages/database/.env.example packages/database/.env
+npm run db:generate
+npm run db:deploy
 npm run dev
 ```
 
@@ -40,10 +42,17 @@ For a downloaded ZIP, open Terminal in its extracted project folder instead of c
 
 | Variable | Loaded by | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_API_URL` | Web `.env.local` | Public API base URL; defaults to `http://localhost:4000`; embedded at build time |
+| `NEXT_PUBLIC_API_URL` | Web `.env.local` | Optional health base; empty defaults to same-origin `/v1` |
+| `API_INTERNAL_URL` | Web `.env.local` | Server-only Nest origin, default `http://127.0.0.1:4000`; rebuild after changing |
+| `WEB_ORIGIN` | API `.env` | Exact public frontend origin for CSRF and callback |
+| `SESSION_SECRET` | API `.env` | Generate locally with `openssl rand -hex 32` |
+| `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` | API `.env` | Registered OIDC confidential client; never commit secrets |
+| `TRUST_PROXY` | API `.env` | Set to 1 only behind a controlled single-hop TLS proxy |
 | `PORT` | API `.env` | API listening port, default 4000; integer 1–65535 |
 | `CORS_ORIGINS` | API `.env` | Comma-separated exact HTTP(S) origins without paths; default `http://localhost:3000` |
-| `DATABASE_URL` | Database package `.env` | PostgreSQL connection string for Prisma commands |
+| `DATABASE_URL` | API and database package `.env` | Same PostgreSQL connection string for runtime and Prisma commands |
+
+Before starting authenticated development, start the database and configure the OIDC client as described in [Stage 2 security/setup](docs/STAGE2_SECURITY.md). The local callback is `http://localhost:3000/v1/auth/callback`. Without these settings only foundation health is available.
 
 Root `.env` is not a substitute for each workspace's environment file. Never commit actual `.env` files. Example database credentials are for local development only. Changing a public frontend environment variable requires rebuilding a production frontend.
 
@@ -57,7 +66,7 @@ npm run db:deploy
 npm run status -w @worksphere/database
 ```
 
-`db:deploy` applies the committed initial migration without creating another migration. `db:migrate` is an authoring command for deliberate future schema changes, not the setup command. Docker binds PostgreSQL to localhost and retains development data in a named volume. `docker compose down` stops the database without deleting that volume.
+`db:deploy` applies both committed migrations without creating another migration. `db:migrate` is an authoring command for deliberate future schema changes, not the setup command. Docker binds PostgreSQL to localhost and retains development data in a named volume. `docker compose down` stops the database without deleting that volume.
 
 For constraint checks against a **disposable, migrated test database**, explicitly export its connection string and run:
 
@@ -70,10 +79,12 @@ Never direct tests at an unrelated or production database. Fixtures are inserted
 ## Verification and production startup
 
 ```bash
-npm run verify:stage1
+npm run verify:stage2
 ```
 
-The fail-fast gate runs 11 source/contract tests, both TypeScript checks and production builds, Prisma validation and generation, 14 configuration/runtime failure tests, 8 embedded database tests, and HTTP smoke checks. Smoke tests start and stop built applications on ports 44671 and 44672. Leave these ports available. If `DATABASE_TEST_MODE=postgres` is set, database checks instead use the explicitly configured disposable PostgreSQL database.
+The foundation part of the fail-fast gate runs 11 source/contract tests, both TypeScript checks and production builds, Prisma validation and generation, 17 configuration/runtime failure tests, 8 embedded database tests, and HTTP smoke checks. Smoke tests start and stop built applications on ports 44671 and 44672. Leave these ports available. If `DATABASE_TEST_MODE=postgres` is set, database checks instead use the explicitly configured disposable PostgreSQL database.
+
+Stage 2 then runs signed OIDC code-flow, session, CSRF, authorization and invitation HTTP integration tests against disposable PGlite. Leave ports 3000, 4000, 44683 and 44684 free. Use a separate migrated disposable PostgreSQL database via `STAGE2_TEST_DATABASE_URL` to run the same suite against PostgreSQL. Never use a production database: Stage 2 tests create persistent fixtures.
 
 Individual commands: `npm test`, `npm run typecheck`, `npm run build`, `npm run test:config`, `npm run test:database`, and `npm run smoke`. Configuration and smoke checks require built applications. Production startup uses separate terminals:
 
@@ -86,13 +97,13 @@ The local gate does not deploy a migration through Prisma, inspect a browser, pu
 
 ## Hosted CI
 
-On pushes to `main`, pull requests, or manual dispatch, CI installs from the lockfile with `npm ci`, runs the local gate, deploys the initial migration into a PostgreSQL 17 service, repeats deployment to check idempotency, checks migration status, and runs all 8 database tests against that service. A configured workflow is not evidence of a passing hosted run; record its actual URL, conclusion and commit in the completion report.
+On pushes to `main`, pull requests, or manual dispatch, CI installs from the lockfile with `npm ci`, runs the local gate, deploys both migrations into a PostgreSQL 17 service, repeats deployment to check idempotency, checks migration status, and runs all 8 database tests against that service, then runs the Stage 2 integration suite on PostgreSQL. A configured workflow is not evidence of a passing hosted run; record its actual URL, conclusion and commit in the completion report.
 
 ## Scope and security limits
 
-The preview has no real accounts or customer data. CORS is an origin policy, not authentication. Foreign keys and uniqueness constraints do not enforce organization membership of creators, reporters, assignees, comment authors or audit actors. No row-level security is configured. Stage 2 must implement authenticated tenant-scoped access and negative cross-tenant tests before exposing private data. Health reports API liveness only, not database readiness.
+Organization data and memberships are real; project/task metrics remain samples. Application-level authorization applies to the Stage 2 organization APIs. Future project/task endpoints must enforce their own tenant membership. No PostgreSQL row-level security is configured. Health is liveness, not database readiness. Invitations are shared manually; email delivery and ownership transfer are outside this stage.
 
-Continue using [NEXT_STAGE_PROMPT.md](NEXT_STAGE_PROMPT.md), only after all Stage 1 acceptance requirements pass. Public production deployment remains Stage 13.
+Stage 3 remains gated by [NEXT_STAGE_PROMPT.md](NEXT_STAGE_PROMPT.md). Public production deployment remains Stage 13.
 
 ## Build and browser verification notes
 

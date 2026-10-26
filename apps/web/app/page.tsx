@@ -27,6 +27,7 @@ export default function Home() {
     <div className="shell">
       <aside className="sidebar">
         <a className="brand" href="/" aria-label="WorkSphere AI home"><span className="brand-icon"><Icon name="bolt" size={21}/></span><span>WorkSphere<span className="brand-ai">AI</span></span></a>
+        <a className="preview-signin" href="/organizations">Manage your organization →</a>
         <div className="workspace-switch"><div className="workspace-icon">S</div><div className="workspace-copy"><strong>Studio North</strong><span>Free workspace</span></div><Icon name="chevron" size={16}/></div>
         <div className="nav-label">WORKSPACE</div>
         <nav aria-label="Main navigation" className="nav-menu">
@@ -58,7 +59,7 @@ export default function Home() {
             <section className="panel activity-panel"><div className="panel-head"><div><h2>Activity overview</h2><p>Team productivity this week</p></div><span className="tiny-select">This week <Icon name="chevron" size={14}/></span></div><div className="legend"><span><b className="legend-dot purple-dot"/> Completed</span><span><b className="legend-dot gray-dot"/> Created</span></div><div className="bar-chart" aria-label="Illustrative weekly activity chart"><div className="chart-grid"><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span></div><div className="chart-bars">{[[40,58],[64,72],[44,85],[70,78],[56,95],[38,67],[48,80]].map((pair, idx)=><div className="bar-column" key={idx}><div className="bar-pair"><div className="bar created" style={{height:`${pair[0]}%`}}/><div className="bar completed" style={{height:`${pair[1]}%`}}/></div><span>{["M","T","W","T","F","S","S"][idx]}</span></div>)}</div></div></section>
           </div>
           <section className="panel tasks-panel"><div className="panel-head"><div><h2>Upcoming tasks</h2><p>Important work on the horizon</p></div><span className="nonfunctional-link">View tasks <Icon name="arrow" size={15}/></span></div><div className="table-scroll"><table className="task-table"><thead><tr><th>Task</th><th>Project</th><th>Assignee</th><th>Label</th><th>Due date</th></tr></thead><tbody>{tasks.map(task=><tr key={task.id}><td><div className="task-name"><span className="fake-checkbox" aria-hidden="true"/><div><strong>{task.name}</strong><small>{task.id}</small></div></div></td><td className="secondary-cell">{task.project}</td><td><span className={`avatar tiny ${task.style}`}>{task.person}</span></td><td><span className={`tag ${task.style}`}>{task.tag}</span></td><td className="secondary-cell">{task.due}</td></tr>)}</tbody></table></div></section>
-          <div className="footer-note"><Icon name="shield" size={15}/> Demo workspace. No user accounts, task persistence, or payment features are enabled in Stage 1.</div>
+          <div className="footer-note"><Icon name="shield" size={15}/> Demo workspace. Project and task data is illustrative. Manage real organizations and memberships separately; task persistence and payments are not enabled.</div>
         </main>
       </div>
     </div>

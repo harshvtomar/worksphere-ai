@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 
 const steps = [
+  ["npm", ["run", "db:generate"]],
   ["npm", ["test"]],
   ["npm", ["run", "typecheck"]],
   ["npm", ["run", "build"]],

@@ -22,11 +22,16 @@
     "verify:stage1": "node scripts/verify-stage1.mjs",
     "test:config": "node --test tests/runtime-config.mjs",
     "db:deploy": "npm run deploy -w @worksphere/database",
-    "test:database": "node --test tests/database-checks.mjs"
+    "test:database": "node --test tests/database-checks.mjs",
+    "test:stage2": "node --test tests/stage2.mjs",
+    "verify:stage2": "npm run verify:stage1 && npm run test:stage2"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.4.3",
+    "@electric-sql/pglite": "^0.5.11",
+    "@electric-sql/pglite-socket": "^0.2.14",
     "concurrently": "^9.2.1",
+    "jose": "^6.2.13",
+    "oidc-provider": "^9.13.0",
     "pg": "^8.23.1",
     "typescript": "~5.9.3"
   }

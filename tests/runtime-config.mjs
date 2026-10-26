@@ -56,3 +56,11 @@ test("missing built health contract fails explicitly in an isolated dist copy", 
     rmSync(temporary, { recursive: true, force: true });
   }
 });
+
+for (const [name, environment, pattern] of [
+  ['missing production secret', { NODE_ENV: 'production', SESSION_SECRET: '', DATABASE_URL: 'postgresql://local:local@127.0.0.1:5432/test' }, /Production requires SESSION_SECRET and DATABASE_URL/],
+  ['short session secret', { SESSION_SECRET: 'too-short', DATABASE_URL: 'postgresql://local:local@127.0.0.1:5432/test' }, /SESSION_SECRET must be at least 32 characters/],
+  ['insecure production web origin', { NODE_ENV: 'production', SESSION_SECRET: 'test-configuration-secret-1234567890', DATABASE_URL: 'postgresql://local:local@127.0.0.1:5432/test', WEB_ORIGIN: 'http://localhost:3000' }, /Production WEB_ORIGIN requires HTTPS/],
+]) {
+  test(`API rejects ${name}`, { timeout: 10000 }, () => expectFailure(environment, pattern));
+}
