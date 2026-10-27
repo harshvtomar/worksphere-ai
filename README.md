@@ -6,7 +6,7 @@ Repository: https://github.com/harshvtomar/worksphere-ai
 
 Stage 2 adds OIDC sign-in, PostgreSQL-backed sessions, protected pages, organizations, invitations and server-enforced Owner/Admin/Member permissions. The public dashboard retains clearly labeled sample project/task data. Organization is the tenant boundary; no separate Workspace entity exists.
 
-Stage 2 verification is in progress. Real external-provider sign-in remains blocked on provider configuration. See [Stage 2 completion report](STAGE_2_COMPLETION_REPORT.md) and [security/setup guide](docs/STAGE2_SECURITY.md). Stage 3 has not started.
+Stage 2 implementation is published and hosted PostgreSQL CI passed. Final browser acceptance is pending. Real external-provider sign-in remains blocked on provider configuration. See [Stage 2 completion report](STAGE_2_COMPLETION_REPORT.md) and [security/setup guide](docs/STAGE2_SECURITY.md). Stage 3 has not started.
 
 ## Stack and layout
 
@@ -84,7 +84,7 @@ npm run verify:stage2
 
 The foundation part of the fail-fast gate runs 11 source/contract tests, both TypeScript checks and production builds, Prisma validation and generation, 17 configuration/runtime failure tests, 8 embedded database tests, and HTTP smoke checks. Smoke tests start and stop built applications on ports 44671 and 44672. Leave these ports available. If `DATABASE_TEST_MODE=postgres` is set, database checks instead use the explicitly configured disposable PostgreSQL database.
 
-Stage 2 then runs signed OIDC code-flow, session, CSRF, authorization and invitation HTTP integration tests against disposable PGlite. Leave ports 3000, 4000, 44683 and 44684 free. Use a separate migrated disposable PostgreSQL database via `STAGE2_TEST_DATABASE_URL` to run the same suite against PostgreSQL. Never use a production database: Stage 2 tests create persistent fixtures.
+Stage 2 then runs signed OIDC code-flow, session, CSRF, authorization and invitation HTTP integration tests against a disposable PostgreSQL database. `STAGE2_TEST_DATABASE_URL` is required for this suite. Leave ports 3000, 4000, 44683 and 44684 free. Create a separate test database, apply both migrations with its `DATABASE_URL`, then export that URL as `STAGE2_TEST_DATABASE_URL`. The foundation gate alone is available as `npm run verify:stage1`. Never use a production database: Stage 2 tests create persistent fixtures.
 
 Individual commands: `npm test`, `npm run typecheck`, `npm run build`, `npm run test:config`, `npm run test:database`, and `npm run smoke`. Configuration and smoke checks require built applications. Production startup uses separate terminals:
 

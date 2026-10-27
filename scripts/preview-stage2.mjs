@@ -3,7 +3,7 @@ import http from 'node:http';
 import { startStack } from '../tests/fixtures/stack.mjs';
 if(process.env.NODE_ENV==='production')throw new Error('QA fixture prohibited in production');
 const publicOrigin=process.env.QA_PUBLIC_ORIGIN??'http://localhost:4173';
-const stack=await startStack({publicOrigin});
+const stack=await startStack({publicOrigin,embeddedPreview:true});
 const server=http.createServer((req,res)=>{
   const provider=req.url.startsWith('/auth')||req.url.startsWith('/interaction/');
   const upstream=http.request({hostname:'127.0.0.1',port:provider?44683:3000,path:req.url,method:req.method,headers:req.headers},response=>{

@@ -49,3 +49,12 @@ Create `apps/web/public/runtime-qa.html` before starting Next for the same respo
 ```
 
 Open `/runtime-qa.html`, confirm both frames show `API connected`, inspect their layouts, and compare each root element's clientWidth and scrollWidth. Inspect browser console and `/v1/health`. Shut down the temporary preview afterward. No deployment, account registration, database modification or Stage 2 work is involved.
+
+
+## Stage 2 browser checkpoint — October 27, 2026
+
+Using built Next.js/NestJS and a disposable signed OIDC test provider, browser actions verified unauthenticated redirect, sign-in to protected dashboard, organization empty state, organization creation with Owner membership, invitation generation/history, reload persistence and wrong-email acceptance denial. These use synthetic accounts, not an external provider.
+
+The concurrent 390px/768px iframe check exposed API request errors and loading states. PGlite's socket multiplexer subsequently reproduced missing portal/prepared-statement errors in HTTP tests. The API late-header crash was fixed and all concurrency tests passed against PostgreSQL 17 in hosted CI. Final responsive browser acceptance remains pending on a PostgreSQL-backed runtime; no final application-console pass is claimed. The public health indicator now defaults to same-origin `/v1`, and sample project/task labels distinguish real organizations from demo metrics.
+
+Repeat on a disposable PostgreSQL database: apply both migrations, configure the real OIDC client per STAGE2_SECURITY.md, launch the application, and check login, organization selection/creation, invitation acceptance/replay, role controls, logout and protected redirects at desktop, 390px and 768px widths. Confirm no horizontal overflow or application console errors. Never use the synthetic provider as a production entry point.

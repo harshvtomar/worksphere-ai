@@ -3,7 +3,7 @@
 | Stage | Workstream | Status |
 |---|---|---|
 | 1 | Architecture, monorepo, API foundation, preview dashboard, DB model | Local builds, Prisma, 11 source + 14 runtime + 8 embedded DB tests and HTTP smoke passed; source published; hosted PostgreSQL 17 migration and CI passed (see completion report) |
-| 2 | Authentication, session security, organizations and role permissions | Implemented; verification pending; external OIDC configuration blocked. See Stage 2 report |
+| 2 | Authentication, session security, organizations and role permissions | Implemented and published; hosted PostgreSQL CI passed; final browser QA pending and external OIDC configuration blocked. See Stage 2 report |
 | 3 | Project CRUD, tasks, Kanban, assignments and due dates | Not started |
 | 4 | Realtime collaboration, presence and notifications | Not started |
 | 5 | Event triggers, workflows, queue workers and retries | Not started |

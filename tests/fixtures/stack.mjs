@@ -5,12 +5,13 @@ import { readFile, readdir } from 'node:fs/promises';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { startProvider } from './oidc.mjs';
 import pg from 'pg';
-export async function startStack({ publicOrigin } = {}) {
+export async function startStack({ publicOrigin, embeddedPreview = false } = {}) {
   const root=new URL('../../',import.meta.url);
   const origin=publicOrigin??'http://127.0.0.1:3000';
   const issuer='http://127.0.0.1:44683';
   let embedded,socket;
   let url=process.env.STAGE2_TEST_DATABASE_URL;
+  if(!url && !embeddedPreview) throw new Error("STAGE2_TEST_DATABASE_URL must point to a disposable PostgreSQL database with both migrations applied. PGlite socket multiplexing cannot validate concurrent sessions reliably.");
   if(!url){
     embedded=await PGlite.create();await embedded.exec("SET TIME ZONE 'UTC'");
     for(const dir of (await readdir(new URL('packages/database/prisma/migrations/',root))).filter(x=>/^\d/.test(x)).sort()) await embedded.exec(await readFile(new URL(`packages/database/prisma/migrations/${dir}/migration.sql`,root),'utf8'));
