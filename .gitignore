@@ -10,3 +10,7 @@ coverage/
 .DS_Store
 *.tsbuildinfo
 packages/database/generated/
+
+# Browser acceptance artifacts
+browser-report/
+browser-results/

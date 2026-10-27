@@ -49,3 +49,18 @@ jobs:
         run: npm run test:stage2
         env:
           STAGE2_TEST_DATABASE_URL: postgresql://worksphere:ci_disposable_only@127.0.0.1:5432/worksphere_test?schema=public
+      - name: Install Chromium for real browser acceptance
+        run: npx playwright install --with-deps chromium
+      - name: Browser acceptance against PostgreSQL 17 and actual applications
+        run: npm run test:browser
+        env:
+          STAGE2_TEST_DATABASE_URL: postgresql://worksphere:ci_disposable_only@127.0.0.1:5432/worksphere_test?schema=public
+      - name: Save browser screenshots and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage2-browser-evidence
+          path: |
+            browser-report/
+            browser-results/
+          retention-days: 14
