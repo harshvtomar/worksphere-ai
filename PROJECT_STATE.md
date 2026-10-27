@@ -13,3 +13,5 @@ See STAGE_2_COMPLETION_REPORT.md for authoritative pending checks, local concurr
 Verified Stage 2 implementation: `438b2aca90e5d376edd4066635e8306bbfd4d56a`. Successful PostgreSQL CI: https://github.com/harshvtomar/worksphere-ai/actions/runs/40405606987. Responsive browser QA now passed at desktop/tablet/mobile sizes on PostgreSQL 17. Remaining check: confidential external OIDC client configuration and real-account login/logout.
 
 Browser verification SHA `56801e17cd8b2690c2882cdbba64f8bb61ac558a`, successful run https://github.com/harshvtomar/worksphere-ai/actions/runs/40487980283. Screenshots: docs/evidence/stage2. No Stage 3 work has started.
+
+Latest functional verification: `305127ec0a24055db26bed259ac4720b514016e3`, CI https://github.com/harshvtomar/worksphere-ai/actions/runs/40488861835 passed, including first-login registration against a separate empty PostgreSQL 17 browser database. Only real external OIDC client/account acceptance remains blocked.

@@ -8,7 +8,7 @@ Implemented OIDC Authorization Code + PKCE/state/nonce, verified identity mappin
 
 Browser-tested implementation SHA: `56801e17cd8b2690c2882cdbba64f8bb61ac558a`.
 
-Successful hosted run: https://github.com/harshvtomar/worksphere-ai/actions/runs/40487980283. All three responsive Chromium journeys passed against standalone PostgreSQL 17 and actual Next.js/NestJS builds. The evidence artifact is `stage2-browser-evidence` (ID 12726295792, SHA-256 `13c785e171728a503a52154e798c8097603d36f91ee1f0717641b462838bf044`). Screenshots from that run are preserved under `docs/evidence/stage2/`. A subsequent checkpoint strengthens registration evidence by giving browser tests their own fresh database; its final SHA/run are recorded in the handoff.
+Successful hosted run: https://github.com/harshvtomar/worksphere-ai/actions/runs/40487980283. All three responsive Chromium journeys passed against standalone PostgreSQL 17 and actual Next.js/NestJS builds. The evidence artifact is `stage2-browser-evidence` (ID 12726295792, SHA-256 `13c785e171728a503a52154e798c8097603d36f91ee1f0717641b462838bf044`). Screenshots from that run are preserved under `docs/evidence/stage2/`. The registration-strengthened checkpoint `305127ec0a24055db26bed259ac4720b514016e3` also passed: https://github.com/harshvtomar/worksphere-ai/actions/runs/40488861835. It provisions a second fresh PostgreSQL database and proves an empty user table becomes a registered OIDC identity through browser login. All regressions and all three browser journeys passed again.
 
 ## Acceptance matrix
 
@@ -21,7 +21,7 @@ Successful hosted run: https://github.com/harshvtomar/worksphere-ai/actions/runs
 | HTTP OIDC/session/CSRF/authorization/invitation tests | Passed: 22 reported (21 subtests + parent); zero failures |
 | Frontend/backend health, metadata, CORS and homepage smoke | Passed |
 | Actual Chromium desktop/tablet/mobile journeys | Passed: 3; zero failures |
-| Organization/member/invitation UI and persisted changes | Passed |
+| First-login OIDC registration, organization/member/invitation UI and persisted changes | Passed against the separate fresh browser database |
 | Wrong-email/replay errors, role controls, expiry and logout UI | Passed |
 | Loading state and duplicate-slug error | Passed using real database responses and a temporary row lock |
 | Browser console/network and document overflow | Passed: no uncaught page errors, unexpected console errors, API 5xx or horizontal document overflow |
