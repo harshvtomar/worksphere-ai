@@ -55,7 +55,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 768, height: 1024
       const duplicate = owner.waitForResponse(r => r.url().endsWith('/v1/organizations') && r.request().method() === 'POST');
       await owner.getByRole('button', { name: 'Create organization', exact: true }).click();
       expect((await duplicate).status()).toBe(409);
-      await expect(owner.getByRole('alert')).toContainText('already in use');
+      await expect(owner.getByRole('alert').filter({ hasText: 'already in use' })).toBeVisible();
       await capture(owner, info, 'duplicate-error');
       await owner.reload();
       await owner.getByLabel('Email address', { exact: true }).fill('member@example.test');
@@ -78,7 +78,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 768, height: 1024
       const denied = outsider.waitForResponse(r => r.url().endsWith('/v1/invitations/accept'));
       await outsider.getByRole('button', { name: 'Accept invitation', exact: true }).click();
       expect((await denied).status()).toBe(403);
-      await expect(outsider.getByRole('alert')).toContainText('invited email');
+      await expect(outsider.getByRole('alert').filter({ hasText: 'invited email' })).toBeVisible();
 
       const member = await newPage(); await login(member, 'member'); await member.goto(invitation);
       await member.getByRole('button', { name: 'Accept invitation', exact: true }).click();
@@ -91,7 +91,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 768, height: 1024
       const replay = member.waitForResponse(r => r.url().endsWith('/v1/invitations/accept'));
       await member.getByRole('button', { name: 'Accept invitation', exact: true }).click();
       expect((await replay).status()).toBe(409);
-      await expect(member.getByRole('alert')).toContainText('already used');
+      await expect(member.getByRole('alert').filter({ hasText: 'already used' })).toBeVisible();
 
       await owner.reload();
       await expect(owner.getByText('member@example.test', { exact: true }).first()).toBeVisible();
