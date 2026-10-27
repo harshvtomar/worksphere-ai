@@ -6,7 +6,7 @@ Repository: https://github.com/harshvtomar/worksphere-ai
 
 Stage 2 adds OIDC sign-in, PostgreSQL-backed sessions, protected pages, organizations, invitations and server-enforced Owner/Admin/Member permissions. The public dashboard retains clearly labeled sample project/task data. Organization is the tenant boundary; no separate Workspace entity exists.
 
-Stage 2 implementation is published and hosted PostgreSQL CI passed. Final browser acceptance is pending. Real external-provider sign-in remains blocked on provider configuration. See [Stage 2 completion report](STAGE_2_COMPLETION_REPORT.md) and [security/setup guide](docs/STAGE2_SECURITY.md). Stage 3 has not started.
+Stage 2 implementation is published and hosted PostgreSQL CI passed. Desktop/tablet/mobile browser journeys passed against PostgreSQL 17. Real external-account acceptance remains pending. Real external-provider sign-in remains blocked on provider configuration. See [Stage 2 completion report](STAGE_2_COMPLETION_REPORT.md) and [security/setup guide](docs/STAGE2_SECURITY.md). Stage 3 has not started.
 
 ## Stack and layout
 
@@ -110,3 +110,8 @@ Stage 3 remains gated by [NEXT_STAGE_PROMPT.md](NEXT_STAGE_PROMPT.md). Public pr
 A repeated production build reproduced a Turbopack persistent-cache reopen error. The supported `experimental.turbopackFileSystemCacheForBuild: false` setting disables that optional cache; two repeat builds then passed. This does not disable compilation or checks.
 
 Live production-server browser QA passed on October 25, 2026 (Asia/Kolkata). Next.js and NestJS ran together behind a temporary same-origin QA reverse proxy; NEXT_PUBLIC_API_URL was set to an empty string at build time. The browser displayed API connected on desktop, 390px mobile and 768px tablet layouts. Document width/scrollWidth matched at 1348/1348, 375/375 and 753/753 respectively. No application console errors were observed; one browser-extension metadata error was unrelated. The browser also displayed the real NestJS health JSON. See docs/BROWSER_QA.md for reproduction and scope.
+
+
+## Browser acceptance
+
+`npm run test:browser` runs desktop/tablet/mobile Chromium journeys against actual servers and standalone PostgreSQL 17. Use a fresh disposable migrated `STAGE2_TEST_DATABASE_URL`. See [browser acceptance instructions](docs/STAGE2_BROWSER_ACCEPTANCE.md). The hosted workflow saves screenshots and sanitized network evidence. Synthetic OIDC browser tests do not count as real external-provider acceptance.

@@ -58,3 +58,10 @@ Using built Next.js/NestJS and a disposable signed OIDC test provider, browser a
 The concurrent 390px/768px iframe check exposed API request errors and loading states. PGlite's socket multiplexer subsequently reproduced missing portal/prepared-statement errors in HTTP tests. The API late-header crash was fixed and all concurrency tests passed against PostgreSQL 17 in hosted CI. Final responsive browser acceptance remains pending on a PostgreSQL-backed runtime; no final application-console pass is claimed. The public health indicator now defaults to same-origin `/v1`, and sample project/task labels distinguish real organizations from demo metrics.
 
 Repeat on a disposable PostgreSQL database: apply both migrations, configure the real OIDC client per STAGE2_SECURITY.md, launch the application, and check login, organization selection/creation, invitation acceptance/replay, role controls, logout and protected redirects at desktop, 390px and 768px widths. Confirm no horizontal overflow or application console errors. Never use the synthetic provider as a production entry point.
+
+
+## Superseding Stage 2 result — PostgreSQL 17 / Chromium
+
+Run https://github.com/harshvtomar/worksphere-ai/actions/runs/40487980283 passed all three real-browser journeys at 1440×900, 768×1024 and 390×844. This resolves the earlier responsive acceptance limitation. Actual Next/Nest servers used standalone PostgreSQL 17; no mocked API responses or PGlite fallback. Expected 403/409 UI errors were asserted; unexpected console/page errors, API 5xx and document overflow failed the suite. A genuine database lock exercised the pending button state. Full-page screenshot review confirmed readable desktop/tablet/mobile organization and member controls.
+
+Preserved screenshots: [desktop](evidence/stage2/desktop.png), [tablet](evidence/stage2/tablet.png), [mobile](evidence/stage2/mobile.png). The full 18-image report and sanitized network evidence are in the run's `stage2-browser-evidence` artifact. See STAGE2_BROWSER_ACCEPTANCE.md for reproduction. Identities remain synthetic; live external OIDC acceptance is separate and blocked.

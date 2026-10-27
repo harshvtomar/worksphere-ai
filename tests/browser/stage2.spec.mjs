@@ -36,7 +36,9 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 768, height: 1024
       const owner = await newPage();
       await owner.goto('/organizations'); await expect(owner).toHaveURL(/\/login$/);
       await capture(owner, info, 'login');
+      if (viewport.width === 1440) expect((await stack.pool.query('SELECT count(*)::int AS count FROM \"User\"')).rows[0].count).toBe(0);
       await login(owner, 'owner');
+      expect((await stack.pool.query('SELECT count(*)::int AS count FROM \"OAuthIdentity\"')).rows[0].count).toBeGreaterThan(0);
       await expect(owner.getByText('Alex Owner', { exact: true })).toBeVisible();
       await capture(owner, info, 'dashboard');
       await owner.getByRole('link', { name: 'Organizations', exact: true }).click();
